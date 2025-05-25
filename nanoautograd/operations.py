@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Optional, Union, Tuple
+from typing import Union, Tuple
 from .function import Function
 from .tensor import Tensor
 

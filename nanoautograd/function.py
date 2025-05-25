@@ -6,11 +6,11 @@ class Function:
     "Base class for all autograd operations"
     @staticmethod
     def forward(ctx:Dict[str,Any], *args:Any, **kwargs:Any) -> Any:
-        raise NotImplementedError("Subclasses must implement forward")
+        raise NotImplementedError("Subclasses must implement forward.")
     
     @staticmethod
     def backward(ctx:Dict[str, Any], grad_out: np.ndarray) -> Tuple:
-        raise NotImplementedError("Subclasses must implement backward")
+        raise NotImplementedError("Subclasses must implement backward.")
     
     @classmethod
     def apply(cls, *args, **kwargs):
