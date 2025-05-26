@@ -29,7 +29,7 @@ class Mul(Function):
     
     @staticmethod
     def backward(ctx, grad_out):
-        return ctx['x'] * grad_out, ctx['y'] * grad_out
+        return ctx['y'] * grad_out, ctx['x'] * grad_out
 
 class Neg(Function):
     @staticmethod

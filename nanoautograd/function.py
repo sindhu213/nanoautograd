@@ -33,7 +33,7 @@ class Function:
         )
         
         def _backward():
-            grads = cls.backward(ctx, output.data)
+            grads = cls.backward(ctx, output.grad)
             if not isinstance(grads, tuple):
                 grads = (grads,)
             for arg, grad in zip(args, grads):

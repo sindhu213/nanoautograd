@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from nanoautograd import Tensor
 from nanoautograd.nn import Linear, Sequential, ReLU, MSELoss
-from nanoautograd.optim import Adam, SGD
+from nanoautograd.optim import Adam
 import numpy as np
 
 def count_trainable_params(model):
@@ -39,7 +39,7 @@ def main():
 
     loss_fn = MSELoss()
     optimizer = Adam(model.parameters(), learning_rate=0.01)
-    epochs = 100
+    epochs = 150
     print("No. of trainable parameters: ", count_trainable_params(model))
 
     # Training loop
