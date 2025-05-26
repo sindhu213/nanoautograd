@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Union, List, Set, Optional, Tuple
-from function import Function
+from .function import Function
 
 class Tensor:
     def __init__(
@@ -24,7 +24,6 @@ class Tensor:
         self._op = _op  
         self._backward = lambda: None
 
-        # Turn off gradient tracking for efficiency
         if self.requires_grad:
             self.zero_grad()
 
@@ -46,7 +45,7 @@ class Tensor:
             else:
                 raise RuntimeError("Gradients can only be implicitly assigned for scalar outputs")
 
-        self.grad = grad if self.grad is None else self.grad + grad
+        self.grad += grad
 
         # Topological sorting 
         topo = []
@@ -61,8 +60,8 @@ class Tensor:
 
         # Backward pass
         for node in reversed(topo):
-            if node._op:
-                node._op._backward()
+            if self._backward is not None:   
+                node._backward()   
 
     def __add__(self, other):
         from .operations import add
@@ -121,4 +120,4 @@ class Tensor:
         return tanh(self)
     
     def __repr__(self) -> str:
-        return f"Tensor${self.data}, requires_grad{self.requires_grad}"
+        return f"Tensor={self.data}, requires_grad={self.requires_grad}"
