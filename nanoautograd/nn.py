@@ -14,16 +14,23 @@ class Module:
             param.zero_grad()
 
     def parameters(self):
+        def _gather_params(obj):
+            params = []
+            if isinstance(obj, Tensor):
+                params.append(obj)
+            elif isinstance(obj, Module):
+                params.extend(obj.parameters())
+            elif isinstance(obj, (list, tuple)):
+                for item in obj:
+                    params.extend(_gather_params(item))
+            elif isinstance(obj, dict):
+                for item in obj.values():
+                    params.extend(_gather_params(item))
+            return params
+
         params = []
-        for _ , value in self.__dict__.items():
-            if isinstance(value, Tensor):
-                params.append(value)
-            elif isinstance(value, Module):
-                params.extend(value.parameters())
-            elif isinstance(value, list):
-                for param in value:
-                    if isinstance(param, Module):
-                        params.extend(param.parameters())
+        for attr in self.__dict__.values():
+            params.extend(_gather_params(attr))
         return params
 
 class Linear(Module):
@@ -33,7 +40,6 @@ class Linear(Module):
         out_features: int, 
         bias: bool = True
     ):
-        
         super().__init__()
         self.in_features = in_features
         self.out_features = out_features
@@ -44,6 +50,7 @@ class Linear(Module):
             data = np.random.uniform(-limit, limit, (in_features, out_features)),
             requires_grad=True
         )
+        self.bias = None
         if bias:
             self.bias = Tensor(
                 data = np.zeros(out_features),
@@ -51,8 +58,9 @@ class Linear(Module):
             )
         
     def forward(self, x: Tensor):
-        out = matmul(self.weights, x)
+        out = matmul(x, self.weights)  
         if self.bias is not None:
+            print("bias.shape: ", self.bias.shape)
             out = add(out, self.bias)
         return out
     
@@ -61,10 +69,10 @@ class Sequential(Module):
         super().__init__()
         self.layers = layers
 
-    def forward(self):
+    def forward(self, x):
         for layer in self.layers:
-            out = layer(out)
-        return out
+            x = layer(x)
+        return x
 
 class ReLU(Module):
     def forward(self, x:Tensor):

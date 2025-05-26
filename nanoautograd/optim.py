@@ -17,12 +17,12 @@ class SGD(Optimizer):
             self, 
             parameters: list[Tensor], 
             learning_rate:float = 0.01, 
-            momentum: float = 0.0,
+            momemtum: float = 0.0,
         ):
         
         super().__init__(parameters)
         self.learning_rate = learning_rate
-        self.momemtum = momentum
+        self.momemtum = momemtum
         self.velocity = {}
 
         for i, param in enumerate(self.parameters):
@@ -39,9 +39,9 @@ class Adam(Optimizer):
     def __init__(
             self, 
             parameters: list[Tensor], 
-            learning_rate:float, 
-            betas: tuple,
-            eps: float = 1e-7
+            learning_rate:float = 0.001, 
+            betas: tuple = (0.9, 0.999),
+            eps: float = 1e-8
         ):
 
         super().__init__(parameters)
@@ -50,8 +50,8 @@ class Adam(Optimizer):
         self.eps = eps
         self.t = 0
 
-        self.m = {}
-        self.v = {}
+        self.m = {}  # first moment
+        self.v = {}  # second moment
 
         for i, param in enumerate(self.parameters):
             self.m[i] = np.zeros_like(param.data)

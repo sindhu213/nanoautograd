@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Union, Tuple
+from typing import Union
 from .function import Function
 from .tensor import Tensor
 
@@ -73,8 +73,10 @@ class Pow(Function):
         x, y = ctx['x'], ctx['y']
         grad_x = y*np.power(x,y-1)
         grad_y = None
+        eps = 1e-8
         if isinstance(y, np.ndarray):
-            grad_y = np.power(x, y) * np.log(x) * grad_out
+            safe_value = x.clip(eps, y-eps)
+            grad_y = np.power(x, y) * np.log(safe_value) * grad_out
         return grad_x, grad_y
 
 class MatMul(Function):
@@ -114,9 +116,10 @@ class Mean(Function):
         ctx['input_shape'] = x.shape
         if dim is None:
             ctx['size'] = np.prod(x.shape) 
+            return np.mean(x)
         else:
             ctx['size'] = x.shape[dim]
-        return np.mean(x, axis = dim)
+            return np.mean(x, axis = dim)
      
     @staticmethod
     def backward(ctx, grad_out):
