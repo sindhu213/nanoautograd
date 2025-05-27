@@ -43,7 +43,7 @@ class Tensor:
             if np.prod(self.shape) == 1:
                 grad = np.ones_like(self.data)
             else:
-                raise RuntimeError("Gradients can only be implicitly assigned for scalar outputs")
+                raise RuntimeError("grad can be implicitly created only for scalar outputs")
 
         self.grad += grad
 

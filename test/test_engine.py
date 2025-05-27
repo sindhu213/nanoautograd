@@ -85,8 +85,33 @@ def test_case4():
     print("pytorch:")
     print(f"Forward pass: {y.item()}, backward_pass: {x.grad.item()}")
 
+def test_case5():
+    # nanoautograd
+    x = Tensor([-4.0, -1.0, 2.0])
+    x.requires_grad = True
+    z = x * 2 + 2 + x
+    q = z.relu() + z * x
+    h = (z * z).relu()
+    y = h + q + q * x
+    y = y.sum()  
+    y.backward()
+    print("nanoautograd:")
+    print(f"Forward pass: {y.data}, backward_pass: {x.grad}")
+
+    # Pytorch
+    x_pt = torch.tensor([-4.0, -1.0, 2.0], dtype=torch.float64, requires_grad=True)
+    z = x_pt * 2 + 2 + x_pt
+    q = z.relu() + z * x_pt
+    h = (z * z).relu()
+    y_pt = h + q + q * x_pt
+    y_pt = y_pt.sum()
+    y_pt.backward()
+    print("pytorch:")
+    print(f"Forward pass: {y_pt.item()}, backward_pass: {x.grad}")
+
 if __name__ == "__main__":
     test_case1()
     test_case2()
     test_case3()
     test_case4()
+    test_case5()

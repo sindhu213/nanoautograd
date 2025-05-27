@@ -39,7 +39,7 @@ def main():
 
     loss_fn = MSELoss()
     optimizer = Adam(model.parameters(), learning_rate=0.01)
-    epochs = 150
+    epochs = 100
     print("No. of trainable parameters: ", count_trainable_params(model))
 
     # Training loop
