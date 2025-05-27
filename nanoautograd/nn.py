@@ -60,7 +60,6 @@ class Linear(Module):
     def forward(self, x: Tensor):
         out = matmul(x, self.weights)  
         if self.bias is not None:
-            print("bias.shape: ", self.bias.shape)
             out = add(out, self.bias)
         return out
     

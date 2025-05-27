@@ -17,12 +17,11 @@ class SGD(Optimizer):
             self, 
             parameters: list[Tensor], 
             learning_rate:float = 0.01, 
-            momemtum: float = 0.0,
+            momentum: float = 0.0,
         ):
-        
         super().__init__(parameters)
         self.learning_rate = learning_rate
-        self.momemtum = momemtum
+        self.momentum = momentum
         self.velocity = {}
 
         for i, param in enumerate(self.parameters):
@@ -32,8 +31,8 @@ class SGD(Optimizer):
         for i, param in enumerate(self.parameters):
             if param.grad is None:
                 continue
-            self.velocity[i] = self.momemtum * self.velocity[i] - self.learning_rate * param.grad
-            param.data = param.data + self.velocity[i]
+            self.velocity[i] = self.momentum * self.velocity[i] + param.grad
+            param.data = param.data - self.learning_rate * self.velocity[i]
 
 class Adam(Optimizer):
     def __init__(
